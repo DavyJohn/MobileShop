@@ -13,9 +13,16 @@ import rx.functions.Func1;
 
 public class ApiWrapper extends HttpMethods {
 
-    public static void getData(Subscriber<TQData> sub){
-        Observable<TQData> observable = memberServer.getData()
-                .map(new HttpResultFunc<TQData>());
-        toSubseribe(observable,sub);
-    }
+//    public static void getData(Subscriber<TQData> sub){
+//        Observable<TQData> observable = memberServer.getData()
+//                .map(new HttpResultFunc<TQData>());
+//        toSubseribe(observable,sub);
+//    }
+    //去掉map 转换
+        public static void getData(String city,Subscriber<HttpResult<TQData>> sub){
+            Observable<HttpResult<TQData>> observable = memberServer.getData(city);
+            toSubseribe(observable,sub);
+        }
+
+
 }

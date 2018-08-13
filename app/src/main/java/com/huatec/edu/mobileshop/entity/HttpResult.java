@@ -6,15 +6,52 @@ package com.huatec.edu.mobileshop.entity;
  */
 
 public class HttpResult<T> {
-    private String code;
+    private String date;
+    private String message;
+    private String status;
+    private String city;
+    private String count;
+
     private T data;
 
-    public String getCode() {
-        return code;
+    public String getDate() {
+        return date;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getCount() {
+        return count;
+    }
+
+    public void setCount(String count) {
+        this.count = count;
     }
 
     public T getData() {

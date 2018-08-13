@@ -32,9 +32,14 @@ import com.huatec.edu.mobileshop.server.HttpMethods;
 import com.huatec.edu.mobileshop.server.MemberServer;
 import com.huatec.edu.mobileshop.server.ProgressDialogSubscriber;
 
+import java.io.IOException;
 import java.util.Observable;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 import rx.Observer;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -55,13 +60,48 @@ public class HomeFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         mText = (TextView) view.findViewById(R.id.sy_text);
-        ApiWrapper.getData(new ProgressDialogSubscriber<TQData>(getActivity()){
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://www.sojson.com/open/api/weather/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        MemberServer server = retrofit.create(MemberServer.class);
+        final Call<HttpResult<TQData>> call = server.getTQ("北京");
+        //异步
+      /*  call.enqueue(new Callback<HttpResult<TQData>>() {
             @Override
-            public void onNext(TQData tqData) {
-                System.out.print(tqData);
-                mText.setText(tqData.getGanmao());
+            public void onResponse(Call<HttpResult<TQData>> call, Response<HttpResult<TQData>> response) {
+                String data = response.body().getData().getGanmao();
+                System.out.print(data);
             }
-        });
+
+            @Override
+            public void onFailure(Call<HttpResult<TQData>> call, Throwable t) {
+
+            }
+        });*/
+        //同步 //需要开启线程 否者容易阻塞 主线程
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Response<HttpResult<TQData>>  response = call.execute();
+                    String data = response.body().getData().getGanmao();
+                    System.out.print(data);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
+        //异步+Retrofit+RxJava
+     /*   ApiWrapper.getData("北京",new ProgressDialogSubscriber<HttpResult<TQData>>(getActivity()){
+            @Override
+            public void onNext(HttpResult<TQData> tqData) {
+                System.out.print(tqData);
+                mText.setText(tqData.getData().getForecast().get(2).getDate());
+            }
+        });*/
 
 
     }

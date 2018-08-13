@@ -67,7 +67,7 @@ public class HttpMethods {
         }
         return methods;
     }
-
+    //分割数据 返回T数据
     public static class HttpResultFunc<T> implements Func1<HttpResult<T>,T>{
         @Override
         public T call(HttpResult<T> tHttpResult) {
